@@ -5,14 +5,14 @@
 #include <map>
 
 struct dir* getNewDir(std::string dirName);
-void addSubDir(dir* parentDir, std::string subDirName);
-struct dir* changeDirs(std::vector<std::string> directoryPath, dir* root);
+void addSubDir(dir*& parentDir, std::string subDirName);
+struct dir*& changeDirs(std::vector<std::string> directoryPath, dir* root);
 struct dir* buildSystem(std::vector<std::string> lines);
 
 // Basic directory
 struct dir {
 	std::string dirName;
-	int dirSize;
+	int dirSize = 0;
 	std::map<std::string, dir*> subDirs = {};
 };
 
@@ -26,10 +26,7 @@ day7::day7(std::string fileName){
 }
 
 int day7::part1() {
-	std::cout << "Building System" << std::endl;
 	dir* root = buildSystem(lines);
-	std::cout << root->dirName;
-
 	return 8008135;
 }
 
@@ -48,13 +45,12 @@ dir* buildSystem(std::vector<std::string> lines) {
 	std::vector<std::string> dirContents; // Vector to hold everything given by ls
 	int x = 1; // Number of lines advanced
 	std::string lsLine; // Variable to hold line given by ls, appended to dirContents
-	int fileSize; // Pulled if listed item isnt a dir
-	std::string newDirName; // Name of new subdirectory
+	int fileSize; 
+	std::string newDirName;
 
-	std::cout << "Entering for loop" << std::endl;
 	// Part 1- Build the filesystem
 	// Using index so it can advance an nth number of times inside the same loop for ls command
-	for (int i = 0; i < lines.size(); i++) {
+	for (int i = 1; i < lines.size(); i++) {
 		// All commands start with $
 		if (lines[i][0] == '$') {
 			command = lines[i].substr(2);
@@ -74,40 +70,37 @@ dir* buildSystem(std::vector<std::string> lines) {
 				// Handling directory contents
 				for (std::string content : dirContents) {
 					if (content.substr(0, 3) == "dir") {
-						std::cout << "Adding subdir process started" << std::endl;
 						// Add subdirectory to tree
 						newDirName = content.substr(content.find(" ") + 1);
 						addSubDir(currentDir, newDirName);
-						std::cout << "Successfully added subdir" << std::endl;
+						//std::cout << "Added " << newDirName << " to " << currentDir->dirName << std::endl;
 					}
 					// If it is not a sub-directory, it is a file with the size
 					else {
-						std::cout << "Adding file size" << std::endl;
 						fileSize = stoi(content.substr(0, (content.size() - content.find(" "))));
 						currentDir->dirSize += fileSize;
-						std::cout << "Successfully added size" << std::endl;
+						//std::cout << "Added file of size: " << fileSize << " to " << currentDir->dirName << std::endl;
+
 					}
 				}
+				dirContents.clear();
 			}
 			// If it's not ls, it's going to be "cd" followed by a directory name
 			else {
 				dirName = command.substr(3);
 				if (dirName == "..") {
-					std::cout << "Moving up dir" << std::endl;
 					// Move into parent directory
 					dirPath.pop_back();
 					currentDir = changeDirs(dirPath, root);
-					std::cout << "Moved up" << std::endl;
 				}
 				else {
-					std::cout << "Moving into dir" << std::endl;
 					// Move into subdirectory
 					dirPath.push_back(dirName);
 					currentDir = changeDirs(dirPath, root);
-					std::cout << "Successfully Moved into dir" << std::endl;
 				}
 			}
 		}
+		
 		// If it's not a command continue to the next loop
 		else {
 			continue;
@@ -124,8 +117,8 @@ dir* getNewDir(std::string newDirName) {
 }
 
 // Function to change directories given a path list and root directory
-dir* changeDirs(std::vector<std::string> directoryPath, dir* root) {
-	dir* currentDir = root;
+dir*& changeDirs(std::vector<std::string> directoryPath, dir* root) {
+	dir*& currentDir = root;
 	for (std::string dir : directoryPath) {
 		currentDir = currentDir->subDirs[dir];
 	}
@@ -134,10 +127,8 @@ dir* changeDirs(std::vector<std::string> directoryPath, dir* root) {
 }
 
 // Function to add a subdirectory to a specific directory
-void addSubDir(dir* parentDir, std::string subDirName) {
+void addSubDir(dir*& parentDir, std::string subDirName) {
 	//Create a new subdirectory
 	dir* subDir = getNewDir(subDirName);
-	std::cout << "Adding subdir" << std::endl;
 	parentDir->subDirs.insert({ subDirName, subDir });
-	std::cout << "All done" << std::endl;
 }
