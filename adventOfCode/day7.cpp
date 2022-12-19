@@ -8,7 +8,6 @@ struct dir* getNewDir(std::string dirName);
 void addSubDir(dir* parentDir, std::string subDirName);
 struct dir* changeDirs(std::vector<std::string> directoryPath, dir* root);
 struct dir* buildSystem(std::vector<std::string> lines);
-void postorder(dir* root);
 
 // Basic directory
 struct dir {
@@ -22,6 +21,7 @@ day7::day7(std::string fileName){
 	daySetup setup(fileName);
 	lines = setup.getLineStrings();
 
+	// Running the code for part 1;
 	std::cout << "The sum of the sizes of valid directories is " << part1() << " units";
 }
 
@@ -29,10 +29,10 @@ int day7::part1() {
 	std::cout << "Building System" << std::endl;
 	dir* root = buildSystem(lines);
 	std::cout << root->dirName;
-	postorder(root);
 
 	return 8008135;
 }
+
 // Function to build a filesystem based on the text file
 dir* buildSystem(std::vector<std::string> lines) {
 	// Used for all command handling
@@ -131,16 +131,6 @@ dir* changeDirs(std::vector<std::string> directoryPath, dir* root) {
 	}
 
 	return currentDir;
-}
-
-void postorder(dir* root) {
-	std::vector<std::string> keys;
-	for (auto const& element : (root->subDirs)){
-		keys.push_back(element.first);
-	}
-	for (std::string key : keys) {
-		std::cout << key << "\n";
-	}
 }
 
 // Function to add a subdirectory to a specific directory
