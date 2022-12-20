@@ -9,5 +9,6 @@ public:
 private:
 	std::vector<std::string> lines;
 	int part1();
+	int part2();
 };
 

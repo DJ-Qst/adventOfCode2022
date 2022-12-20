@@ -8,6 +8,8 @@ struct dir* getNewDir(std::string dirName);
 void addSubDir(dir*& parentDir, std::string subDirName);
 struct dir*& changeDirs(std::vector<std::string> directoryPath, dir* root);
 struct dir* buildSystem(std::vector<std::string> lines);
+int part1Sum(dir* root, int totalSize);
+int part2Sum(dir* root, int currentFree, int closesSum);
 
 // Basic directory
 struct dir {
@@ -22,12 +24,22 @@ day7::day7(std::string fileName){
 	lines = setup.getLineStrings();
 
 	// Running the code for part 1;
-	std::cout << "The sum of the sizes of valid directories is " << part1() << " units";
+	std::cout << "The sum of the sizes of valid directories is " << part1() << " units\n";
+
+	// Running the code for part 2;
+	std::cout << "The directory with the size closest to required is " << part2() << " units";
 }
 
 int day7::part1() {
 	dir* root = buildSystem(lines);
-	return 8008135;
+	int totalSize = part1Sum(root, 0);
+	return totalSize;
+}
+ 
+int day7::part2() {
+	dir* root = buildSystem(lines);
+	int closestSize = part2Sum(root, (70000000 - root->dirSize), 9999999);
+	return closestSize;
 }
 
 // Function to build a filesystem based on the text file
@@ -35,6 +47,7 @@ dir* buildSystem(std::vector<std::string> lines) {
 	// Used for all command handling
 	std::string command;
 	std::vector<std::string> dirPath;
+	std::vector<std::string> dirPathCopy;
 	dir* root = getNewDir("/");
 	dir* currentDir = root;
 
@@ -77,10 +90,28 @@ dir* buildSystem(std::vector<std::string> lines) {
 					}
 					// If it is not a sub-directory, it is a file with the size
 					else {
-						fileSize = stoi(content.substr(0, (content.size() - content.find(" "))));
-						currentDir->dirSize += fileSize;
-						//std::cout << "Added file of size: " << fileSize << " to " << currentDir->dirName << std::endl;
-
+						fileSize = stoi(content);
+						// If you're in a subdirectory
+						if (dirPath.size() != 0) {
+							dirPathCopy = dirPath;
+							while (dirPathCopy.size() >= 0) {
+								currentDir->dirSize += fileSize;
+								//std::cout << "Added file of size: " << fileSize << " to " << currentDir->dirName << std::endl;
+								if (currentDir->dirName != "/") {
+									dirPathCopy.pop_back();
+									currentDir = changeDirs(dirPathCopy, root);
+								}
+								else {
+									break;
+								}
+								
+							}
+							currentDir = changeDirs(dirPath, root);
+						}
+						else {
+							//std::cout << "Added file of size: " << fileSize << " to " << currentDir->dirName << std::endl;
+							currentDir->dirSize += fileSize;
+						}
 					}
 				}
 				dirContents.clear();
@@ -131,4 +162,31 @@ void addSubDir(dir*& parentDir, std::string subDirName) {
 	//Create a new subdirectory
 	dir* subDir = getNewDir(subDirName);
 	parentDir->subDirs.insert({ subDirName, subDir });
+}
+
+
+// Both of these sums use a Pre-Order traversal of the tree
+// Given a the root, find the sum of all directories with a size < 100000
+int part1Sum(dir* root, int totalSize){
+	if (root->dirSize <= 100000) {
+		//std::cout << root->dirName << ": " << root->dirSize << " units\n";
+		totalSize += root->dirSize;
+	}
+
+	for (const auto& kv : root->subDirs) {
+		totalSize = part1Sum(kv.second, totalSize);
+	}
+	return totalSize;
+}
+
+// Given the root, find the smallest directory such that when deleted will add with the current free space to be over 30000000
+int part2Sum(dir* root, int currentFree, int closestSum) {
+	if (((currentFree + root->dirSize) >= 30000000) && (root->dirSize < closestSum)) {
+		closestSum = root->dirSize;
+	}
+
+	for (const auto& kv : root->subDirs) {
+		closestSum = part2Sum(kv.second, currentFree, closestSum);
+	}
+	return closestSum;
 }
