@@ -1,10 +1,6 @@
-#include "day7.h"
-#include <iostream>
-#include <vector>
-#include <map>
-#include <string>
+#include "day8.h"
 
 int main(){
-    day7 day7("day7.txt");
-	return 0;
+	day8 day8("day8.txt");
+	return 0;	
 }

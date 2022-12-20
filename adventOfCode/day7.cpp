@@ -4,10 +4,13 @@
 #include <string>
 #include <map>
 
-struct dir* getNewDir(std::string dirName);
-void addSubDir(dir*& parentDir, std::string subDirName);
-struct dir*& changeDirs(std::vector<std::string> directoryPath, dir* root);
-struct dir* buildSystem(std::vector<std::string> lines);
+// Functions used to build tree
+struct dir* getNewDir(std::string dirName);  // Create a new directory
+void addSubDir(dir*& parentDir, std::string subDirName);   // Add a directory as a sub to another
+
+// Functions specific to my code
+struct dir* buildSystem(std::vector<std::string> lines);  // Actually works with file and builds tree
+struct dir*& changeDirs(std::vector<std::string> directoryPath, dir* root);  // Changes working directories
 int part1Sum(dir* root, int totalSize);
 int part2Sum(dir* root, int currentFree, int closesSum);
 
@@ -27,7 +30,7 @@ day7::day7(std::string fileName){
 	std::cout << "The sum of the sizes of valid directories is " << part1() << " units\n";
 
 	// Running the code for part 2;
-	std::cout << "The directory with the size closest to required is " << part2() << " units";
+	std::cout << "The directory with the size closest to required is " << part2() << " units\n";
 }
 
 int day7::part1() {
@@ -44,20 +47,21 @@ int day7::part2() {
 
 // Function to build a filesystem based on the text file
 dir* buildSystem(std::vector<std::string> lines) {
-	// Used for all command handling
 	std::string command;
-	std::vector<std::string> dirPath;
-	std::vector<std::string> dirPathCopy;
+	std::vector<std::string> dirPath;  // The actual working directory
+	
+	// Initializing tree
 	dir* root = getNewDir("/");
 	dir* currentDir = root;
 
 	// Used to handle cd command
-	std::string dirName;  // Name of new dir to switch into
+	std::string dirName;
 
 	// Used to handle ls command
 	std::vector<std::string> dirContents; // Vector to hold everything given by ls
 	int x = 1; // Number of lines advanced
 	std::string lsLine; // Variable to hold line given by ls, appended to dirContents
+	std::vector<std::string> dirPathCopy;  // Copy of working dirPath for adding file sizes
 	int fileSize; 
 	std::string newDirName;
 
@@ -163,7 +167,6 @@ void addSubDir(dir*& parentDir, std::string subDirName) {
 	dir* subDir = getNewDir(subDirName);
 	parentDir->subDirs.insert({ subDirName, subDir });
 }
-
 
 // Both of these sums use a Pre-Order traversal of the tree
 // Given a the root, find the sum of all directories with a size < 100000

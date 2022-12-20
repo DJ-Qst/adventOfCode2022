@@ -2,11 +2,12 @@
 #include <iostream>
 #include <vector>
 
-class day7 {
+
+class day8 {
 public:
-	day7(std::string fileName);
+	day8(std::string fileName);
 private:
-	std::vector<std::string> lines;
+	std::vector<std::string> rows;
 	int part1();
 	int part2();
 };
