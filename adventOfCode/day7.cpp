@@ -14,7 +14,7 @@ struct dir*& changeDirs(std::vector<std::string> directoryPath, dir* root);  // 
 int part1Sum(dir* root, int totalSize);
 int part2Sum(dir* root, int currentFree, int closesSum);
 
-// Basic directory
+// Basic directory, needs to be at top because hoisting doesn't work for some reason
 struct dir {
 	std::string dirName;
 	int dirSize = 0;

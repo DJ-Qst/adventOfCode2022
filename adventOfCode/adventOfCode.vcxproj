@@ -136,6 +136,7 @@
     <ClCompile Include="day6.cpp" />
     <ClCompile Include="day7.cpp" />
     <ClCompile Include="day8.cpp" />
+    <ClCompile Include="day9.cpp" />
     <ClCompile Include="daySetup.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +148,7 @@
     <Text Include="day6.txt" />
     <Text Include="day7.txt" />
     <Text Include="day8.txt" />
+    <Text Include="day9.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="day1.h" />
@@ -157,6 +159,7 @@
     <ClInclude Include="day6.h" />
     <ClInclude Include="day7.h" />
     <ClInclude Include="day8.h" />
+    <ClInclude Include="day9.h" />
     <ClInclude Include="daySetup.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
