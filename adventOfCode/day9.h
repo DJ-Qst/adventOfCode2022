@@ -10,5 +10,6 @@ private:
 	std::vector<std::string> steps;
 
 	int part1();
+	int part2();
 };
 
