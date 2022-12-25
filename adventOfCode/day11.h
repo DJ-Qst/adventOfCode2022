@@ -9,6 +9,7 @@ public:
 private:
 	std::vector<std::string> txtLines;
 	int part1();
-	int part2();
+	unsigned long long part2();
+	void testing();
 };
 
