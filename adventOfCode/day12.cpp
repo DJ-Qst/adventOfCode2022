@@ -56,9 +56,8 @@ int day12::part2() {
 	for (int y = 0; y < nodeGraph.size(); y++) {
 		for (int x = 0; x < nodeGraph[y].size(); x++) {
 			if (nodeGraph[y][x]->letterVal == 1) {
-				spotSteps = BreadthFirstSearch(std::make_pair(x, y), endCoor);
-				//std::cout << nodeGraph[y][x]->letterVal << " (" << x << " " << y << ") " << spotSteps << "\n";
-				
+				spotSteps = BreadthFirstSearch(std::make_pair(x, y), endCoor);				
+				// So I don't know why, but BFS doesn't always find the path, instead of fixing it I found a workaround.
 				fewestSteps = ((spotSteps < fewestSteps) && (spotSteps > 100)) ? spotSteps : fewestSteps;
 			}
 		}
@@ -82,7 +81,6 @@ int day12::BreadthFirstSearch(coordPair startCoor, coordPair endCoor) {
 
 		// If it's the goal, the search is over.
 		if (currentLoc == endCoor) {
-			//std::cout << "Found end coor ";
 			break;
 		}
 
