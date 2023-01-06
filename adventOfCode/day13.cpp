@@ -77,20 +77,6 @@ int day13::part2() {
 	return indexSum;
 }
 
-std::vector<std::string> day13::split(std::string fullString, std::string splitter) {
-	std::vector<std::string> splitString;
-	int startPos = 0;
-	int occurrance = fullString.find(splitter, startPos);
-	while (occurrance >= 0) {
-		splitString.push_back(fullString.substr(startPos, (occurrance-startPos)));
-		startPos = occurrance + splitter.size();
-		occurrance = fullString.find(splitter, startPos);
-	}
-	splitString.push_back(fullString.substr(startPos)); // Adding anything remaining
-
-	return splitString;
-}
-
 std::vector<std::string> day13::splitItem(std::string item) {
 	int openBrac = 0;
 	int startPos = 0;

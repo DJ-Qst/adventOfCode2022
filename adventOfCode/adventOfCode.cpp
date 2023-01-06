@@ -1,9 +1,6 @@
-#include "day13.h"
-#include <set>
-#include <map>
-#include <iostream>
+#include "day14.h"
 
 int main(){
-	//day13 day13("day13.txt");
+	day14 day14("day14.txt");
 	return 0;	
 }
